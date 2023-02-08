@@ -62,15 +62,12 @@ Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command
 # Score du jeu
 Lscore = Label(text=f'Score : {score}', font=("Arial",17),bg='#0C343D',fg='white').pack(side=BOTTOM)
 
-# Essai afin de comprendre le fonctionnement des binds
+ # Essai afin de comprendre le fonctionnement des binds
+# def keytest():
+#     if key.keysym
 
-'''
-def test():
-    key = event.keysim
-    if Key=="Left":
-    print("left")
-    return 
-fen.bind('<Key>', test)'''
+
+# fen.bind('<key>', lambda event: print("Mouse clicked the label"))
 
 # fin code jeu
 fen.mainloop()
