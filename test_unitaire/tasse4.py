@@ -33,7 +33,7 @@ def tasse_4(a,b,c,d):
     #     d=0
 
     # ici on retourne les cinq valeurs en un tableau
-    temp=[a,b,c,d,nmove] #tableau temporaire de fin
+    temp=[a,b,c,d,(str(nmove)+" moves")] #tableau temporaire de fin
     return temp
 
 #Test de la fonction tasse
