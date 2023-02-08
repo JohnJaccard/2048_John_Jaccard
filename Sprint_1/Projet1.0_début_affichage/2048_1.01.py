@@ -66,7 +66,9 @@ displaystart(words)
 # function to randoms label
 def display():
     words = [[random.choice(values), random.choice(values), random.choice(values), random.choice(values)],[random.choice(values), random.choice(values), random.choice(values), random.choice(values)],[random.choice(values), random.choice(values), random.choice(values), random.choice(values)],[random.choice(values), random.choice(values), random.choice(values), random.choice(values)],]
-    displaystart(words)
+       for line in range(len(words)):
+        for col in range(len(words[line])):
+            labels[line][col].config(text=words[line][col])
 
 # recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=display, activebackground='#0C343D').pack()
