@@ -1,6 +1,6 @@
 '''
 John Jaccard
-Premier test d'affichage des labels
+Première version du 2048 durant le sprint 1
 03.02.23
 1.01
 '''
@@ -16,7 +16,7 @@ values_tables = [[8192, 4096, 2048, 0],
                  [16, 8, 4, 2]]
 
 # possible values
-values = [0,2,4]#,8,16,32,64,128,256,512,1024,2048,4096,8192]
+values = [0,2,4]
 
 # liste de couleur
 colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E', 32: '#F27405', 64: '#FFC2B5', 128: '#8C2656', 256: '#8F797E', 512: '#731702', 1024: '#646C8F', 2048: '#F20544', 4096: '#014040', 8192: '#011836'}
@@ -50,7 +50,6 @@ Ltitle = Label(text='2048', font=("Arial",40),bg='#0C343D',fg='white').pack(pady
 #Création des labels (d'abord on les définit avec =, puis on les place dans la fenêtre avec .place(x,y)
 for line in range(len(values_tables)):
     for col in range(len(values_tables[line])):
-    # construction de chaque label sans le placer
         # création label
         labels[line][col] = tkinter.Label (text =values_tables[line][col], width=6, height=3, borderwidth=1, relief="solid", font=("Arial", 30))
 
@@ -80,10 +79,12 @@ display(values_tables)
 
 def newGame():
     global values_tables
+    # test de bouton new game mais sans les probabilité avec les 0,2 et 4
     values_tables = [[random.choice(values), random.choice(values), random.choice(values), random.choice(values)],
                      [random.choice(values), random.choice(values), random.choice(values), random.choice(values)],
                      [random.choice(values), random.choice(values), random.choice(values), random.choice(values)],
                      [random.choice(values), random.choice(values), random.choice(values), random.choice(values)]]
+    # rappel de la fonction display
     display(values_tables)
 
 # recommencer le jeu
