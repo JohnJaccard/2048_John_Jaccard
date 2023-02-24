@@ -39,7 +39,8 @@ def move(a, b, c, d):
 
     return a, b, c, d
 
-def tasse_4(a,b,c,d,line,direction):
+def tasse_4(a,b,c,d):
+    global score
     # mettre les zéros à droite
     # aide de léo
     a, b, c, d = move(a, b, c, d)
@@ -47,64 +48,54 @@ def tasse_4(a,b,c,d,line,direction):
     if a == b:
         a = a*2
         b = 0
+        score += a
 
     if b == c:
         b = b*2
         c = 0
+        score += b
 
     if c == d:
         c = c*2
         d = 0
+        score += c
 
     a, b, c, d = move(a, b, c, d)
-
-    if direction == "Right" or direction == "d":
-        a, b, c, d = d, c, b, a
-        values_tables[line] = [a, b, c, d]
-
-    if direction == "Left" or direction == "a":
-        values_tables[line] = [a, b, c, d]
-
-    if direction == "Up" or direction == "w":
-        values_tables[0][line] = a
-        values_tables[1][line] = b
-        values_tables[2][line] = c
-        values_tables[3][line] = d
-
-    if direction == "Down" or direction == "s":
-        a, b, c, d = d, c, b, a
-        values_tables[0][line] = a
-        values_tables[1][line] = b
-        values_tables[2][line] = c
-        values_tables[3][line] = d
-
-    return values_tables
+    return [a, b, c, d]
 
 def tass(event):
     Key = event.keysym
     if Key == "Left" or Key == "a":
-        tasse_4(values_tables[0][0], values_tables[0][1], values_tables[0][2], values_tables[0][3], 0, Key)
-        tasse_4(values_tables[1][0], values_tables[1][1], values_tables[1][2], values_tables[1][3], 1, Key)
-        tasse_4(values_tables[2][0], values_tables[2][1], values_tables[2][2], values_tables[2][3], 2, Key)
-        tasse_4(values_tables[3][0], values_tables[3][1], values_tables[3][2], values_tables[3][3], 3, Key)
+        for line in range(4):
+            temp = tasse_4(values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3])
+            values_tables[line][0] = temp[0]
+            values_tables[line][1] = temp[1]
+            values_tables[line][2] = temp[2]
+            values_tables[line][3] = temp[3]
 
     if Key == "Right" or Key == "d":
-        tasse_4(values_tables[0][3], values_tables[0][2], values_tables[0][1], values_tables[0][0], 0, Key)
-        tasse_4(values_tables[1][3], values_tables[1][2], values_tables[1][1], values_tables[1][0], 1, Key)
-        tasse_4(values_tables[2][3], values_tables[2][2], values_tables[2][1], values_tables[2][0], 2, Key)
-        tasse_4(values_tables[3][3], values_tables[3][2], values_tables[3][1], values_tables[3][0], 3, Key)
+        for line in range(4):
+            temp = tasse_4(values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0])
+            values_tables[line][3] = temp[0]
+            values_tables[line][2] = temp[1]
+            values_tables[line][1] = temp[2]
+            values_tables[line][0] = temp[3]
 
     if Key == "Up" or Key == "w":
-        tasse_4(values_tables[0][0], values_tables[1][0], values_tables[2][0], values_tables[3][0], 0, Key)
-        tasse_4(values_tables[0][1], values_tables[1][1], values_tables[2][1], values_tables[3][1], 1, Key)
-        tasse_4(values_tables[0][2], values_tables[1][2], values_tables[2][2], values_tables[3][2], 2, Key)
-        tasse_4(values_tables[0][3], values_tables[1][3], values_tables[2][3], values_tables[3][3], 3, Key)
+          for col in range(4):
+            temp = tasse_4(values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col])
+            values_tables[0][col] = temp[0]
+            values_tables[1][col] = temp[1]
+            values_tables[2][col] = temp[2]
+            values_tables[3][col] = temp[3]
 
     if Key == "Down" or Key == "s":
-        tasse_4(values_tables[3][0], values_tables[2][0], values_tables[1][0], values_tables[0][0], 0, Key)
-        tasse_4(values_tables[3][1], values_tables[2][1], values_tables[1][1], values_tables[0][1], 1, Key)
-        tasse_4(values_tables[3][2], values_tables[2][2], values_tables[1][2], values_tables[0][2], 2, Key)
-        tasse_4(values_tables[3][3], values_tables[2][3], values_tables[1][3], values_tables[0][3], 3, Key)
+        for col in range(4):
+                temp = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
+                values_tables[3][col] = temp[0]
+                values_tables[2][col] = temp[1]
+                values_tables[1][col] = temp[2]
+                values_tables[0][col] = temp[3]
 
     display(values_tables)
 
@@ -143,7 +134,7 @@ Ltitle = Label(text='2048', font=("Arial",40),bg='#0C343D',fg='white').pack(pady
 for line in range(len(values_tables)):
     for col in range(len(values_tables[line])):
         # création label
-        labels[line][col] = tkinter.Label (width=6, height=3, borderwidth=1, relief="solid", font=("Arial", 30))
+        labels[line][col] = tkinter.Label(width=6, height=3, borderwidth=1, relief="solid", font=("Arial", 30))
 
         # placement du label dans la fenêtre par ses coordonnées en pixels
         labels[line][col].place(x=30 + width * col, y=120 + height * line)
@@ -180,7 +171,7 @@ display(values_tables)
 def newGame():
     global values_tables
     # test de bouton new game mais sans les probabilité avec les 0,2 et 4
-    position_possible=[0,1,2,3]
+    position_possible = [0,1,2,3]
     values_tables = [[0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0],
