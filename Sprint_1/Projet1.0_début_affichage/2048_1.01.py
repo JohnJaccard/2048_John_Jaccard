@@ -25,10 +25,10 @@ colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E',
 score = 0
 
 # tableau 2 dimensions avec des vides qui deviendront des labels.
-labels = [[None,None,None,None],
-          [None,None,None,None],
-          [None,None,None,None],
-          [None,None,None,None]]
+labels = [[None, None, None, None],
+          [None, None, None, None],
+          [None, None, None, None],
+          [None, None, None, None]]
 
 width = 150 #espacement horizontal en pixels des étiquettes (remarque la taille des labels est en caractères)
 height = 150 #espacement vertical en pixels des étiquettes
@@ -51,7 +51,7 @@ Ltitle = Label(text='2048', font=("Arial",40),bg='#0C343D',fg='white').pack(pady
 for line in range(len(values_tables)):
     for col in range(len(values_tables[line])):
         # création label
-        labels[line][col] = tkinter.Label (text =values_tables[line][col], width=6, height=3, borderwidth=1, relief="solid", font=("Arial", 30))
+        labels[line][col] = tkinter.Label (width=6, height=3, borderwidth=1, relief="solid", font=("Arial", 30))
 
         # placement du label dans la fenêtre par ses coordonnées en pixels
         labels[line][col].place(x=30 + width * col, y=120 + height * line)
@@ -71,7 +71,7 @@ def display(values_table):
                 textcolor = 'black'
 
             # modifier le text et la couleur des cases
-            labels[line][col].config(text=values_tables[line][col],bg=color,fg=textcolor)
+            labels[line][col].config(text=values_tables[line][col], bg=color, fg=textcolor)
             if var == 0:
                 labels[line][col].config(text="")
 
