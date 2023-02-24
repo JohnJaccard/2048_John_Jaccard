@@ -1,6 +1,6 @@
 '''
 John Jaccard
-Première version du 2048 durant le sprint 1
+Sprint 2 2048
 03.02.23
 0.2
 '''
