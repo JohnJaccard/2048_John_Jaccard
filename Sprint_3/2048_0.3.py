@@ -94,6 +94,7 @@ def tass_bind(event):
         for col in range(4):
              [values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col]] = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
     if nmove>0:
+        print(nmove)
         nmove= 0
         x = random.randint(0, 3)
         y = random.randint(0, 3)
