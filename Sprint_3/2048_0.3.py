@@ -98,7 +98,7 @@ def tass_bind(event):
         nmove= 0
         x = random.randint(0, 3)
         y = random.randint(0, 3)
-        while values_tables[x][y]!=0:
+        while values_tables[x][y] != 0:
             x = random.randint(0, 3)
             y = random.randint(0, 3)
         values_tables[x][y] = 2
