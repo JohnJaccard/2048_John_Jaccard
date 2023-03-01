@@ -1,46 +1,52 @@
 '''
 John Jaccard
-Première version du 2048 durant le sprint 1
+version du sprint final
 03.02.23
-0.2
+0.3
 '''
-Version = "0.2"
+Version = "0.3"
 from tkinter import *
 import tkinter.font
 import random
 
-# tableau 2 dimensions avec des mots (4x4)
+# tableau 2 dimensions avec des valeurs (4x4)
 '''values_tables = [[8192, 4096, 0, 2048],
                  [1024, 512, 0, 256],
                  [128, 0, 64, 32],
                  [16, 8, 4, 2]]'''
-values_tables = [[0, 0, 0, 2],
-                 [2, 0, 2, 2],
-                 [2, 2, 2, 2],
-                 [0, 0, 2, 2]]
-
-
+values_tables = [[0, 0, 2, 2],
+                 [4, 8, 16, 32],
+                 [64, 128, 256, 512],
+                 [1024, 2048, 4096, 8192]]
+# initiate nmove
+nmove = 0
 # function to tass
 def move(a, b, c, d):
-    if a == 0 and b != 0:
-        a,b,c,d = b,c,d,a
-
-    if b == 0 and c!=0:
-        b,c,d=c,d,b
-
-    if c == 0 and d != 0:
-        c, d = d, c
-
+    global nmove
     if a == 0 and b != 0:
         a, b, c, d = b, c, d, a
+        nmove+=1
 
     if b == 0 and c != 0:
         b, c, d = c, d, b
+        nmove+=1
+
+    if c == 0 and d != 0:
+        c, d = d, c
+        nmove+=1
+
+    if a == 0 and b != 0:
+        a, b, c, d = b, c, d, a
+        nmove+=1
+
+    if b == 0 and c != 0:
+        b, c, d = c, d, b
+        nmove+=1
 
     return a, b, c, d
 
-def tasse_4(a,b,c,d,line,direction):
-    global score
+def tasse_4(a,b,c,d):
+    global score, nmove
     # mettre les zéros à droite
     # aide de léo
     a, b, c, d = move(a, b, c, d)
@@ -48,70 +54,55 @@ def tasse_4(a,b,c,d,line,direction):
     if a == b:
         a = a*2
         b = 0
-        score+=a
+        score += a
+        nmove += 1
 
     if b == c:
         b = b*2
         c = 0
-        score+=b
+        score += b
+        nmove += 1
 
     if c == d:
         c = c*2
         d = 0
-        score+=c
+        score += c
+        nmove += 1
 
     a, b, c, d = move(a, b, c, d)
+    return [a, b, c, d]
 
-    if direction == "Right" or direction == "d":
-        a, b, c, d = d, c, b, a
-        values_tables[line] = [a, b, c, d]
 
-    if direction == "Left" or direction == "a":
-        values_tables[line] = [a, b, c, d]
-
-    if direction == "Up" or direction == "w":
-        values_tables[0][line] = a
-        values_tables[1][line] = b
-        values_tables[2][line] = c
-        values_tables[3][line] = d
-
-    if direction == "Down" or direction == "s":
-        a, b, c, d = d, c, b, a
-        values_tables[0][line] = a
-        values_tables[1][line] = b
-        values_tables[2][line] = c
-        values_tables[3][line] = d
-
-    return values_tables and score
-
-def tass(event):
+def tass_bind(event):
+    global nmove
+    # initiate nmove
     Key = event.keysym
+    # fonction de tassage assignée à chaque touche (aide de thibault pour l'affichage des nouvelles valeurs)
     if Key == "Left" or Key == "a":
-        tasse_4(values_tables[0][0], values_tables[0][1], values_tables[0][2], values_tables[0][3], 0, Key)
-        tasse_4(values_tables[1][0], values_tables[1][1], values_tables[1][2], values_tables[1][3], 1, Key)
-        tasse_4(values_tables[2][0], values_tables[2][1], values_tables[2][2], values_tables[2][3], 2, Key)
-        tasse_4(values_tables[3][0], values_tables[3][1], values_tables[3][2], values_tables[3][3], 3, Key)
+        for line in range(4):
+            [values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3]] = tasse_4(values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3])
 
     if Key == "Right" or Key == "d":
-        tasse_4(values_tables[0][3], values_tables[0][2], values_tables[0][1], values_tables[0][0], 0, Key)
-        tasse_4(values_tables[1][3], values_tables[1][2], values_tables[1][1], values_tables[1][0], 1, Key)
-        tasse_4(values_tables[2][3], values_tables[2][2], values_tables[2][1], values_tables[2][0], 2, Key)
-        tasse_4(values_tables[3][3], values_tables[3][2], values_tables[3][1], values_tables[3][0], 3, Key)
+        for line in range(4):
+            [values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0]] = tasse_4(values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0])
 
     if Key == "Up" or Key == "w":
-        tasse_4(values_tables[0][0], values_tables[1][0], values_tables[2][0], values_tables[3][0], 0, Key)
-        tasse_4(values_tables[0][1], values_tables[1][1], values_tables[2][1], values_tables[3][1], 1, Key)
-        tasse_4(values_tables[0][2], values_tables[1][2], values_tables[2][2], values_tables[3][2], 2, Key)
-        tasse_4(values_tables[0][3], values_tables[1][3], values_tables[2][3], values_tables[3][3], 3, Key)
+        for col in range(4):
+            [values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col]] = tasse_4(values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col])
 
     if Key == "Down" or Key == "s":
-        tasse_4(values_tables[3][0], values_tables[2][0], values_tables[1][0], values_tables[0][0], 0, Key)
-        tasse_4(values_tables[3][1], values_tables[2][1], values_tables[1][1], values_tables[0][1], 1, Key)
-        tasse_4(values_tables[3][2], values_tables[2][2], values_tables[1][2], values_tables[0][2], 2, Key)
-        tasse_4(values_tables[3][3], values_tables[2][3], values_tables[1][3], values_tables[0][3], 3, Key)
+        for col in range(4):
+             [values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col]] = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
+    if nmove>0:
+        nmove= 0
+        x = random.randint(0, 3)
+        y = random.randint(0, 3)
+        while values_tables[x][y]!=0:
+            x = random.randint(0, 3)
+            y = random.randint(0, 3)
+        values_tables[x][y] = 2
 
     display(values_tables)
-
 
 
 # liste de couleur
@@ -153,10 +144,10 @@ for line in range(len(values_tables)):
         labels[line][col].place(x=30 + width * col, y=120 + height * line)
 
 # bind tass left to left key
-fen.bind("<Key>", lambda event: tass(event))
+fen.bind("<Key>", lambda event: tass_bind(event))
 
 # Score du jeu
-Lscore = Label(font=("Arial",17),bg='#0C343D',fg='white')
+Lscore = Label(font=("Arial", 17), bg='#0C343D', fg='white')
 
 # function to color labels
 def display(values_table):
@@ -187,8 +178,8 @@ display(values_tables)
 def newGame():
     global values_tables,score
     # test de bouton new game mais sans les probabilité avec les 0,2 et 4
-    score=0
-    position_possible=[0,1,2,3]
+    score = 0
+    position_possible = [0, 1, 2, 3]
     values_tables = [[0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0],
@@ -196,7 +187,9 @@ def newGame():
     for i in range(2):
         x = int(random.choice(position_possible))
         y = int(random.choice(position_possible))
-        values_tables[x][y] = 2
+        if values_tables[x][y] == 0:
+            values_tables[x][y] = 2
+
     # rappel de la fonction display
     display(values_tables)
 
