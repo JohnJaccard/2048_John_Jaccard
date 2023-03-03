@@ -44,17 +44,14 @@ def tasse_4(a,b,c,d):
     if a == b:
         a = a*2
         b = 0
-        score += a
 
     if b == c:
         b = b*2
         c = 0
-        score += b
 
     if c == d:
         c = c*2
         d = 0
-        score += c
 
     a, b, c, d = move(a, b, c, d)
     return [a, b, c, d]
@@ -84,9 +81,6 @@ def tass_bind(event):
 
 # liste de couleur
 colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E', 32: '#F27405', 64: '#FFC2B5', 128: '#8C2656', 256: '#8F797E', 512: '#731702', 1024: '#646C8F', 2048: '#F20544', 4096: '#014040', 8192: '#011836'}
-
-# score de base
-score = 0
 
 # tableau 2 dimensions avec des vides qui deviendront des labels.
 labels = [[None, None, None, None],
@@ -122,9 +116,6 @@ for line in range(len(values_tables)):
 
 # bind tass aux touches du clavier
 fen.bind("<Key>", lambda event: tass_bind(event))
-
-# Score du jeu
-Lscore = Label(font=("Arial",17),bg='#0C343D',fg='white')
 
 # function to color labels
 def display(values_table):
@@ -166,10 +157,6 @@ def newGame():
 
 # recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=newGame, activebackground='#0C343D').pack()
-
-# .pack du score
-Lscore.pack(side=BOTTOM)
-
 
 
 # fin code jeu
