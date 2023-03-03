@@ -160,6 +160,7 @@ for line in range(len(values_tables)):
         # placement du label dans la fenêtre par ses coordonnées en pixels
         labels[line][col].place(x=30 + width * col, y=120 + height * line)
 
+
 # bind tass left to left key
 fen.bind("<Key>", lambda event: tass_bind(event))
 
@@ -167,6 +168,8 @@ fen.bind("<Key>", lambda event: tass_bind(event))
 Lscore = Label(font=("Arial", 17), bg='#0C343D', fg='white')
 LHighScore = Label(font=("Arial", 17),bg='#0C343D', fg='white',text=f'Highscore : {Highscore}')
 
+# end screen
+Lwin_screen = Label()
 
 
 # function to color labels
@@ -188,6 +191,13 @@ def display(values_table):
             labels[line][col].config(text=values_tables[line][col], bg=color, fg=textcolor)
             if var == 0:
                 labels[line][col].config(text="")
+
+            if var == 2048:
+                win_screen = PhotoImage(file='loose_screen.png')
+                Lwin_screen.pack()
+                Lwin_screen.config( image=win_screen)
+
+                print("2048")
 
             Lscore.config(text=f"Score : {score}")
             LHighScore.config(text=f'Highscore : {Highscore}')
