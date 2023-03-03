@@ -9,18 +9,25 @@ from tkinter import *
 import tkinter.font
 import random
 
+
 # tableau 2 dimensions avec des valeurs (4x4)
-'''values_tables = [[8192, 4096, 0, 2048],
-                 [1024, 512, 0, 256],
-                 [128, 0, 64, 32],
-                 [16, 8, 4, 2]]'''
-values_tables = [[0, 0, 2, 2],
-                 [4, 8, 16, 32],
-                 [64, 128, 256, 512],
-                 [1024, 2048, 4096, 8192]]
+values_tables = [[0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]]
+
 # initiate nmove
 nmove = 0
-# function to tass
+
+# liste chiffre apparaisable
+value_list = [2, 2, 2, 2, 4]
+
+# initiate highscore
+text = open("HighScore.txt", "r")
+Highscore = text.read()
+text.close()
+
+# # fonction pour trier les 0 afin de tasser plus facilement
 def move(a, b, c, d):
     global nmove
     if a == 0 and b != 0:
@@ -37,7 +44,7 @@ def move(a, b, c, d):
 
     if a == 0 and b != 0:
         a, b, c, d = b, c, d, a
-        nmove+=1
+        nmove += 1
 
     if b == 0 and c != 0:
         b, c, d = c, d, b
@@ -45,10 +52,9 @@ def move(a, b, c, d):
 
     return a, b, c, d
 
+# fonction pour tasser (aide de léo)
 def tasse_4(a,b,c,d):
-    global score, nmove
-    # mettre les zéros à droite
-    # aide de léo
+    global score, nmove, Highscore
     a, b, c, d = move(a, b, c, d)
     # tassage
     if a == b:
@@ -69,6 +75,12 @@ def tasse_4(a,b,c,d):
         score += c
         nmove += 1
 
+    if score >= int(Highscore):
+        Highscore = score
+        text = open("HighScore.txt", "w")
+        text.write(str(Highscore))
+        text.close()
+
     a, b, c, d = move(a, b, c, d)
     return [a, b, c, d]
 
@@ -77,33 +89,37 @@ def tass_bind(event):
     global nmove
     # initiate nmove
     Key = event.keysym
-    # fonction de tassage assignée à chaque touche (aide de thibault pour l'affichage des nouvelles valeurs)
-    if Key == "Left" or Key == "a":
+    # fonction de tassage assignée à chaque touche
+    if Key == "Left" or Key == "a" or Key == "A":
         for line in range(4):
             [values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3]] = tasse_4(values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3])
 
-    if Key == "Right" or Key == "d":
+    if Key == "Right" or Key == "d" or Key == "D":
         for line in range(4):
             [values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0]] = tasse_4(values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0])
 
-    if Key == "Up" or Key == "w":
+    if Key == "Up" or Key == "w" or Key == "W":
         for col in range(4):
             [values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col]] = tasse_4(values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col])
 
-    if Key == "Down" or Key == "s":
+    if Key == "Down" or Key == "s" or Key == "S":
         for col in range(4):
              [values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col]] = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
-    if nmove>0:
-        print(nmove)
+
+    display(values_tables)
+
+    # spawn de 2 à chaque mouvement
+    if nmove > 0:
         nmove= 0
         x = random.randint(0, 3)
         y = random.randint(0, 3)
         while values_tables[x][y] != 0:
             x = random.randint(0, 3)
             y = random.randint(0, 3)
-        values_tables[x][y] = 2
+        values_tables[x][y] = random.choice(value_list)
+        labels[x][y].config(text=values_tables[x][y], bg='black', fg='white')
 
-    display(values_tables)
+
 
 
 # liste de couleur
@@ -149,6 +165,9 @@ fen.bind("<Key>", lambda event: tass_bind(event))
 
 # Score du jeu
 Lscore = Label(font=("Arial", 17), bg='#0C343D', fg='white')
+LHighScore = Label(font=("Arial", 17),bg='#0C343D', fg='white',text=f'Highscore : {Highscore}')
+
+
 
 # function to color labels
 def display(values_table):
@@ -171,6 +190,7 @@ def display(values_table):
                 labels[line][col].config(text="")
 
             Lscore.config(text=f"Score : {score}")
+            LHighScore.config(text=f'Highscore : {Highscore}')
 
 display(values_tables)
 
@@ -180,24 +200,29 @@ def newGame():
     global values_tables,score
     # test de bouton new game mais sans les probabilité avec les 0,2 et 4
     score = 0
-    position_possible = [0, 1, 2, 3]
     values_tables = [[0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0]]
     for i in range(2):
-        x = int(random.choice(position_possible))
-        y = int(random.choice(position_possible))
-        if values_tables[x][y] == 0:
-            values_tables[x][y] = 2
+        x = random.randint(0, 3)
+        y = random.randint(0, 3)
+        while values_tables[x][y] !=0:
+            x = random.randint(0, 3)
+            y = random.randint(0, 3)
+        values_tables[x][y] = 2
 
     # rappel de la fonction display
     display(values_tables)
+
+# start a new game while launching the game
+newGame()
 
 # recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=newGame, activebackground='#0C343D').pack()
 
 Lscore.pack(side=BOTTOM)
+LHighScore.pack(side=BOTTOM)
 
 
 
