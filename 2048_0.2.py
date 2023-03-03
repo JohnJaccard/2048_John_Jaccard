@@ -151,6 +151,9 @@ def newGame():
     for i in range(2):
         x = random.randint(0, 3)
         y = random.randint(0, 3)
+        while values_tables[x][y] !=0:
+            x = random.randint(0, 3)
+            y = random.randint(0, 3)
         values_tables[x][y] = 2
     # rappel de la fonction display
     display(values_tables)
