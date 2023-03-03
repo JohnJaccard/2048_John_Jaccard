@@ -10,10 +10,6 @@ import tkinter.font
 import random
 
 # tableau 2 dimensions avec des mots (4x4)
-'''values_tables = [[8192, 4096, 0, 2048],
-                 [1024, 512, 0, 256],
-                 [128, 0, 64, 32],
-                 [16, 8, 4, 2]]'''
 values_tables = [[0, 0, 0, 2],
                  [2, 0, 2, 2],
                  [2, 2, 2, 2],
@@ -63,39 +59,24 @@ def tasse_4(a,b,c,d):
     a, b, c, d = move(a, b, c, d)
     return [a, b, c, d]
 
-def tass(event):
+def tass_bind(event):
     Key = event.keysym
-    if Key == "Left" or Key == "a":
+    # fonction de tassage assignée à chaque touche
+    if Key == "Left" or Key == "a" or Key == "A":
         for line in range(4):
-            temp = tasse_4(values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3])
-            values_tables[line][0] = temp[0]
-            values_tables[line][1] = temp[1]
-            values_tables[line][2] = temp[2]
-            values_tables[line][3] = temp[3]
+            [values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3]] = tasse_4(values_tables[line][0], values_tables[line][1], values_tables[line][2], values_tables[line][3])
 
-    if Key == "Right" or Key == "d":
+    if Key == "Right" or Key == "d" or Key == "D":
         for line in range(4):
-            temp = tasse_4(values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0])
-            values_tables[line][3] = temp[0]
-            values_tables[line][2] = temp[1]
-            values_tables[line][1] = temp[2]
-            values_tables[line][0] = temp[3]
+            [values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0]] = tasse_4(values_tables[line][3], values_tables[line][2], values_tables[line][1], values_tables[line][0])
 
-    if Key == "Up" or Key == "w":
-          for col in range(4):
-            temp = tasse_4(values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col])
-            values_tables[0][col] = temp[0]
-            values_tables[1][col] = temp[1]
-            values_tables[2][col] = temp[2]
-            values_tables[3][col] = temp[3]
-
-    if Key == "Down" or Key == "s":
+    if Key == "Up" or Key == "w" or Key == "W":
         for col in range(4):
-                temp = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
-                values_tables[3][col] = temp[0]
-                values_tables[2][col] = temp[1]
-                values_tables[1][col] = temp[2]
-                values_tables[0][col] = temp[3]
+            [values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col]] = tasse_4(values_tables[0][col], values_tables[1][col], values_tables[2][col], values_tables[3][col])
+
+    if Key == "Down" or Key == "s" or Key == "S":
+        for col in range(4):
+             [values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col]] = tasse_4(values_tables[3][col], values_tables[2][col], values_tables[1][col], values_tables[0][col])
 
     display(values_tables)
 
@@ -139,8 +120,8 @@ for line in range(len(values_tables)):
         # placement du label dans la fenêtre par ses coordonnées en pixels
         labels[line][col].place(x=30 + width * col, y=120 + height * line)
 
-# bind tass left to left key
-fen.bind("<Key>", lambda event: tass(event))
+# bind tass aux touches du clavier
+fen.bind("<Key>", lambda event: tass_bind(event))
 
 # Score du jeu
 Lscore = Label(font=("Arial",17),bg='#0C343D',fg='white')
@@ -155,7 +136,7 @@ def display(values_table):
             color = colors[var]
             textcolor = 'white'
 
-            # changer la couleur de certaine cases pour améliorer la lisibilité
+            # changer la couleur du texte de certaine cases pour améliorer la lisibilité
             if var in [2, 4, 64]:
                 textcolor = 'black'
 
@@ -171,14 +152,14 @@ display(values_tables)
 def newGame():
     global values_tables
     # test de bouton new game mais sans les probabilité avec les 0,2 et 4
-    position_possible = [0,1,2,3]
     values_tables = [[0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0],
                      [0, 0, 0, 0]]
+    # prendre deux positions aléatoires et insérer deux 2
     for i in range(2):
-        x = int(random.choice(position_possible))
-        y = int(random.choice(position_possible))
+        x = random.randint(0, 3)
+        y = random.randint(0, 3)
         values_tables[x][y] = 2
     # rappel de la fonction display
     display(values_tables)
@@ -186,6 +167,7 @@ def newGame():
 # recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=newGame, activebackground='#0C343D').pack()
 
+# .pack du score
 Lscore.pack(side=BOTTOM)
 
 
