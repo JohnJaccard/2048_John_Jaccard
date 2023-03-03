@@ -143,7 +143,7 @@ height = 150 #espacement vertical en pixels des étiquettes
 fen = Tk()
 fen.title(f'2048 by John Jaccard v{Version}')
 sizex = 650
-sizey = 775
+sizey = 800
 fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
 fen.config(bg='#0C343D')
 fen.resizable(width=False, height=False)
