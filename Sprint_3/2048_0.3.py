@@ -9,6 +9,7 @@ from tkinter import *
 import tkinter.font
 import random
 import copy
+import json
 
 
 # tableau 2 dimensions avec des valeurs (4x4)
@@ -26,6 +27,7 @@ nmove = 0
 # Faire
 end_game = False
 end_game2 = False
+
 # liste chiffre apparaisable
 value_list = [2, 2, 2, 2, 4]
 
@@ -82,7 +84,7 @@ def tasse_4(a,b,c,d):
         score += c
         nmove += 1
 
-    if score >= int(Highscore):
+    if int(score) >= int(Highscore):
         Highscore = score
         text = open("HighScore.txt", "w")
         text.write(str(Highscore))
@@ -147,14 +149,30 @@ def tass_bind(event):
         values_tables[x][y] = random.choice(value_list)
         labels[x][y].config(text=values_tables[x][y], bg='black', fg='white')
 
+    # Prends la game precedemment quittée
+    game = open("Gamesave.txt", 'w')
+    game.write(str(values_tables))
+    game.close()
+
+    # Prends le score de la game precedemment quittée
+    score_saving = open("Score.txt", 'w')
+    score_saving.write(str(score))
+    score_saving.close()
+
     check()
 
 # liste de couleur
 colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E', 32: '#F27405', 64: '#FFC2B5', 128: '#8C2656', 256: '#8F797E', 512: '#731702', 1024: '#646C8F', 2048: '#F20544', 4096: '#014040', 8192: '#011836'}
 
 # score de base
-score = 0
+score_base = open("Score.txt", 'r')
+try:
+    score = int(score_base.read())
+except ValueError:
+    score = 0
+score_base.close()
 
+#
 # tableau 2 dimensions avec des vides qui deviendront des labels.
 labels = [[None, None, None, None],
           [None, None, None, None],
@@ -338,7 +356,15 @@ def newGame():
     display(values_tables)
 
 # Start a new game while launching the game
-newGame()
+Start_game = open("Gamesave.txt", 'r')
+if Start_game.read() != "":
+    with open('Gamesave.txt', 'r') as temp_op:
+        values_tables = json.load(temp_op)
+    display(values_tables)
+else:
+    newGame()
+
+text.close()
 
 # Recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=newGame, activebackground='#0C343D').pack()
