@@ -159,12 +159,13 @@ def tass_bind(event):
     score_saving.write(str(score))
     score_saving.close()
 
+    # Fonction afin de check si la game est finie et si oui afficher l'écran de fin
     check()
 
 # liste de couleur
 colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E', 32: '#F27405', 64: '#FFC2B5', 128: '#8C2656', 256: '#8F797E', 512: '#731702', 1024: '#646C8F', 2048: '#F20544', 4096: '#014040', 8192: '#011836'}
 
-# score de base
+# Initialiser le score de base si une partie à été commencée
 score_base = open("Score.txt", 'r')
 try:
     score = int(score_base.read())
@@ -172,7 +173,7 @@ except ValueError:
     score = 0
 score_base.close()
 
-#
+
 # tableau 2 dimensions avec des vides qui deviendront des labels.
 labels = [[None, None, None, None],
           [None, None, None, None],
@@ -184,7 +185,6 @@ width = 150
 
 # Espacement vertical en pixels des étiquettes
 height = 150
-
 
 # Construction de la fenêtre :
 fen = Tk()
@@ -242,7 +242,7 @@ def loose_game():
     Lloose_screen.destroy()
     Bloose.destroy()
     Lloose_screen = Label(image=loose_screen,bg='grey')
-    Bloose = Button(bg='grey',fg='black',borderwidth=0, activebackground='grey',text="Afficher le jeu", command=lambda:loose_game(), font=("Ubuntu Mono", 30, "italic"))
+    Bloose = Button(bg='grey', fg='black', borderwidth=0, activebackground='grey', text="Afficher le jeu", command=lambda:loose_game(), font=("Ubuntu Mono", 30, "italic"))
     end_game2 = True
     return end_game2
 
@@ -279,10 +279,11 @@ def check():
         [values_tables2[3][line], values_tables2[2][line], values_tables2[1][line], values_tables2[0][line]] = tasse_4(values_tables2[3][line], values_tables2[2][line], values_tables2[1][line], values_tables2[0][line])
         if [values_tables2[3][line], values_tables2[2][line], values_tables2[1][line], values_tables2[0][line]] == [table_test[3][line], table_test[2][line], table_test[1][line], table_test[0][line]]:
             nomove += 1
+
     # Si aucun mouvement possible faire apparaître l'écran de fin
     if nomove == 16:
         Lloose_screen.pack()
-        Bloose.place(x=200, y=400)
+        Bloose.place(x=200, y=500)
 
     # Remettre le score de base
     score = score2
@@ -355,12 +356,13 @@ def newGame():
     # Rappel de la fonction display
     display(values_tables)
 
-# Start a new game while launching the game
+# Lancer l'ancienne game si il est existe une
 Start_game = open("Gamesave.txt", 'r')
 if Start_game.read() != "":
     with open('Gamesave.txt', 'r') as temp_op:
         values_tables = json.load(temp_op)
     display(values_tables)
+# Sinon recommencer une nouvelle partie
 else:
     newGame()
 
