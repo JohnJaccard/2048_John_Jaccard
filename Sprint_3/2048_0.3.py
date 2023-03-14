@@ -10,6 +10,7 @@ import tkinter.font
 import random
 import copy
 import json
+from tkinter import messagebox
 
 
 # tableau 2 dimensions avec des valeurs (4x4)
@@ -223,7 +224,88 @@ Bwin = Button(bg='white',fg='black',borderwidth=0, activebackground='white',text
 # Image et écran de défaite + le bouton continuer sur l'écran de défaite
 loose_screen = PhotoImage(file='loose_screen.png',width=600,height=600)
 Lloose_screen = Label(image=loose_screen,bg='grey')
-Bloose = Button(bg='grey',fg='black',borderwidth=0, activebackground='grey',text="Afficher le jeu",command=lambda:loose_game(),font=("Ubuntu Mono", 30, "italic"))
+Bloose = Button(bg='grey',fg='white',borderwidth=0, activebackground='grey',text="Afficher le jeu",command=lambda:loose_game(),font=("Ubuntu Mono", 30, "italic"))
+
+# Fonction qui affiche le menu de spawn
+def cheat_screen():
+    sizex = 900
+    sizey = 800
+    fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
+    Bcheat_quit.place(x=750,y=50)
+    Lcheat_x_y.place(x=660,y=100)
+    Echeat_x.place(x=725,y=120)
+    Echeat_y.place(x=775,y=120)
+    Lcheat_nb.place(x=690,y=140)
+    Echeat_nb.place(x=725,y=160)
+    Bcheat_confirm.place(x=730,y=180)
+    Bcheat_randomnb.place(x=730,y=220)
+
+# Fonction pour quitter le menu de spawn
+def quit_cheat_screen():
+    sizex = 650
+    sizey = 800
+    fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
+
+# Bouton afin d'afficher la case avec les coordonnées rentrées en vérifiant si les informations sont correctes
+def confirm_cheat_screen():
+    global Echeat_x, Echeat_y, Echeat_nb, values_tables
+    try:
+        x = int(Echeat_x.get())
+        y = int(Echeat_y.get())
+        nb = int(Echeat_nb.get())
+        if x in [0, 1, 2, 3] and y in [0,1,2,3]:
+            if nb in [0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]:
+                values_tables[x][y] = nb
+            else:
+                messagebox.showerror("Erreur", "Nombre invalide")
+        else:
+            messagebox.showerror("Erreur", "Coordonnées invalides")
+
+    except ValueError:
+        messagebox.showerror("Erreur", "Veuillez saisir un nombre valide")
+    display(values_tables)
+
+# Fonction permettant de random la position de tout les tuiles avec une valeur
+def random_cheat_screen():
+    global values_tables
+    values = []
+    for i in values_tables:
+        for y in i:
+            values.append(y)
+    values_tables = [[0, 0, 0, 0],
+                     [0, 0, 0, 0],
+                     [0, 0, 0, 0],
+                     [0, 0, 0, 0]]
+    for j in values:
+        x = random.randint(0, 3)
+        y = random.randint(0, 3)
+        while values_tables[x][y] != 0:
+            x = random.randint(0, 3)
+            y = random.randint(0, 3)
+        values_tables[x][y] = j
+    display(values_tables)
+
+
+# Bouton permettant dâfficher le menu de spawn de tuile
+Bcheat = Button(text='DEBUG',bg='#0C343D',fg='#0C343D',borderwidth=0, command=lambda: cheat_screen())
+
+# Bouton permettant de quitter le menu de spawn de tuile
+Bcheat_quit = Button(text='Exit',bg='#0C343D',fg='white',borderwidth=0, command=lambda: quit_cheat_screen())
+
+# Label et entrées pour le remplissage des coordonnées
+Lcheat_x_y = Label(text='Veuillez indiquez des coords entre 0 et 3',bg='#0C343D',fg='white',borderwidth=0)
+Echeat_x = Entry(width=2)
+Echeat_y = Entry(width=2)
+
+# Label et entrée pour demander le nombre à spawn
+Lcheat_nb = Label(text='Veuillez insérer le nb à placer',bg='#0C343D',fg='white',borderwidth=0)
+Echeat_nb = Entry(width=10)
+
+# Bouton afin de confirmer le nombre et les coordonnées rentrées en vérifiant si elles sont correctes et afficher la case
+Bcheat_confirm = Button(text='Confirm',bg='#0C343D',fg='white',borderwidth=0, command=lambda:confirm_cheat_screen())
+
+# Bouton relié à une fonction qui permet de random tout les nombres existant et les replacer
+Bcheat_randomnb = Button(text='Random',bg='#0C343D',fg='white',borderwidth= 0,command=lambda: random_cheat_screen())
 
 
 # Fonction afin de continuer le jeu quand on atteint 2048
@@ -282,7 +364,7 @@ def check():
 
     # Si aucun mouvement possible faire apparaître l'écran de fin
     if nomove == 16:
-        Lloose_screen.pack()
+        Lloose_screen.place(x=25,y=110)
         Bloose.place(x=200, y=500)
 
     # Remettre le score de base
@@ -296,7 +378,10 @@ def display(values_table):
 
             # Prendre la couleur selon la valeur de la case
             var = values_tables[line][col]
-            color = colors[var]
+            if var>8192:
+                color = 'black'
+            else:
+                color = colors[var]
             textcolor = 'white'
 
             # Changer la couleur de certaine cases pour améliorer la lisibilité
@@ -310,7 +395,7 @@ def display(values_table):
 
             # vérifier si un 2048  est présent afin d'afficher l'écran de win et demander si il souhaite continuer
             if end_game == False and var == 2048:
-                Lwin_screen.pack()
+                Lwin_screen.place(x=25,y=110)
                 Bwin.place(x=400, y=300)
 
             Lscore.config(text=f"Score : {score}")
@@ -373,6 +458,7 @@ Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command
 
 Lscore.pack(side=BOTTOM)
 LHighScore.pack(side=BOTTOM)
+Bcheat.place(x=605, y=780)
 
 # fin app jeu
 fen.mainloop()
