@@ -90,7 +90,7 @@ def tass_bind(event):
     undo_table = copy.deepcopy(values_tables)
 
     # Copie du score pour le bouton Undo
-    undo_score = copy.deepcopy(score)
+    undo_score = score
 
     # Assigner la touche à une variable
     Key = event.keysym
@@ -276,9 +276,10 @@ def rgb_to_hexa(rgb):
 
 # Fonction afin d'arrêter les couleur multicolore et remettre ensuite la fonction de base
 def randomcoloroff():
-    global Random_color,Bcheat_randomcolor
+    global Random_color,Bcheat_randomcolor,values_tables
     Random_color = 0
     Bcheat_randomcolor.config(command=lambda: randomcolorcheck())
+    display(values_tables)
 
 # Cette fonction génère trois valeur de 0 a 255 pour chaque case du tableau et les appliquent
 # A la fin il change le bouton afin que en réappuyant on arrête le mode rainbow
@@ -304,7 +305,6 @@ def randomcolorcheck():
         fen.after(4, randomcolorcheck)
     else:
         Random_color = 1
-
 
 # Fonction permettant de random la position de tout les tuiles avec une valeur
 def random_cheat_screen():
@@ -386,7 +386,7 @@ def check():
     nomove = 0
 
     # Sauvegarde du score afin que cette fonction n'altère pas le score
-    score2 = copy.deepcopy(score)
+    score2 = score
 
     # Copie de la table afin de ne pas altérer la vraie
     values_tables2 = copy.deepcopy(values_tables)
@@ -474,7 +474,7 @@ def newGame():
     end_game2 = False
 
     # Réinitisaliser le score
-    undo_score = copy.deepcopy(score)
+    undo_score = score
     score = 0
 
     # Initialiser un tableau vide
