@@ -4,6 +4,8 @@ version du sprint final
 03.02.23
 0.3
 '''
+import winsound
+
 Version = "0.3"
 from tkinter import *
 import tkinter.font
@@ -32,7 +34,7 @@ end_game2 = False
 value_list = [2, 2, 2, 2, 4]
 
 # Prendre le score highscore
-text = open("HighScore.txt", "r")
+text = open("txt\HighScore.txt", "r")
 Highscore = int(text.read())
 text.close()
 
@@ -143,12 +145,12 @@ def tass_bind(event):
         labels[x][y].config(text=values_tables[x][y], bg='black', fg='white')
 
     # Prends la game precedemment quittée
-    game = open("Gamesave.txt", 'w')
+    game = open("txt\Gamesave.txt", 'w')
     game.write(str(values_tables))
     game.close()
 
     # Écrit le score de la partie dans un fichier texte pour que quand on quitte la partie en revenant nous aurons toujours le même score
-    score_saving = open("Score.txt", 'w')
+    score_saving = open("txt\Score.txt", 'w')
     score_saving.write(str(score))
     score_saving.close()
 
@@ -159,7 +161,7 @@ def tass_bind(event):
 colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E', 32: '#F27405', 64: '#FFC2B5', 128: '#8C2656', 256: '#8F797E', 512: '#731702', 1024: '#646C8F', 2048: '#F20544', 4096: '#014040', 8192: '#011836'}
 
 # Initialiser le score de base si une partie à été commencée
-score_base = open("Score.txt", 'r')
+score_base = open("txt\Score.txt", 'r')
 try:
     score = int(score_base.read())
     undo_score = score
@@ -189,6 +191,11 @@ fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
 fen.config(bg='#0C343D')
 fen.resizable(width=False, height=False)
 
+# to play
+# winsound.PlaySound('music.wav', winsound.SND_ASYNC)
+# to stop
+# winsound.PlaySound(None, winsound.SND_PURGE)
+
 # Titre du jeu
 Ltitle = Label(text='2048', font=("Arial",40), bg='#0C343D', fg='white').pack(pady=10)
 
@@ -209,16 +216,16 @@ Lscore = Label(font=("Arial", 17), bg='#0C343D', fg='white')
 LHighScore = Label(font=("Arial", 17),bg='#0C343D', fg='white', text=f'Highscore : {Highscore}')
 
 # Touche afin d'annuler la dernière action
-BUndo_image = PhotoImage(file='Undo_img.png')
+BUndo_image = PhotoImage(file='img\Bundo_img.png')
 BUndo = Button( bg='#0C343D', activebackground='#0C343D', borderwidth=0,image=BUndo_image,command=lambda: Undo())
 
 # Image et écran de victoire + le bouton continuer sur l'écran de victoire
-win_screen = PhotoImage(file='win_screen.png',width=600,height=600)
+win_screen = PhotoImage(file='img\win_screen.png',width=600,height=600)
 Lwin_screen = Label(image=win_screen,bg='white')
 Bwin = Button(bg='white',fg='black',borderwidth=0, activebackground='white',text="Continue",command=lambda: continue_game(),font=("Ubuntu Mono", 30, "italic"))
 
 # Image et écran de défaite + le bouton continuer sur l'écran de défaite
-loose_screen = PhotoImage(file='loose_screen.png',width=600,height=600)
+loose_screen = PhotoImage(file='img\loose_screen.png',width=600,height=600)
 Lloose_screen = Label(image=loose_screen,bg='grey')
 Bloose = Button(bg='grey',fg='white',borderwidth=0, activebackground='grey',text="Afficher le jeu",command=lambda : loose_game(),font=("Ubuntu Mono", 30, "italic"))
 
@@ -353,7 +360,7 @@ Bcheat_randomnb = Button(text='Random', bg='#0C343D', fg='white',borderwidth=0, 
 Random_color = 1
 
 # Bouton permettant de lancer et d'arrêter le mode 'rainbow' avec une image
-Rainbow_img = PhotoImage(file='rainbow_mod_button.png',width=95,height=50)
+Rainbow_img = PhotoImage(file='img\Brainbow_mod_button.png',width=95,height=50)
 Bcheat_randomcolor = Button(image=Rainbow_img, bg='#0C343D', activebackground='#0C343D', borderwidth=0, command=lambda: randomcolorcheck())
 
 # Bouton permettant de remttre le highscore à 0
@@ -426,7 +433,7 @@ def display(values_table):
     # Augmentation du "Highscore" si le score dépasse le "Highscore"
     if Highscore < score:
         Highscore = score
-        text = open("HighScore.txt", "w")
+        text = open("txt\HighScore.txt", "w")
         text.write(str(Highscore))
         text.close()
 
@@ -499,9 +506,9 @@ def newGame():
     display(values_tables)
 
 # Lancer l'ancienne game si il est existe une
-Start_game = open("Gamesave.txt", 'r')
+Start_game = open("txt\Gamesave.txt", 'r')
 if Start_game.read() != "":
-    with open('Gamesave.txt', 'r') as temp_op:
+    with open('txt\Gamesave.txt', 'r') as temp_op:
         values_tables = json.load(temp_op)
         undo_table = copy.deepcopy(values_tables)
     display(values_tables)
