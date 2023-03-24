@@ -264,7 +264,7 @@ def stop():
 def cheat_screen():
     sizex = 900
     sizey = 800
-    fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
+    fen.geometry(f"{sizex}x{sizey}")
     Bcheat_quit.place(x=750,y=50)
     Lcheat_x_y.place(x=660,y=100)
     Echeat_x.place(x=725,y=120)
@@ -284,7 +284,7 @@ def cheat_screen():
 def quit_cheat_screen():
     sizex = 650
     sizey = 800
-    fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
+    fen.geometry(f"{sizex}x{sizey}")
 
 # Bouton afin d'afficher la case avec les coordonnées rentrées en vérifiant si les informations sont correctes
 def confirm_cheat_screen():
