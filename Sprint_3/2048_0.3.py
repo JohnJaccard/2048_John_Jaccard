@@ -4,8 +4,6 @@ version du sprint final
 03.02.23
 0.3
 '''
-import winsound
-
 Version = "0.3"
 from tkinter import *
 import tkinter.font
@@ -13,9 +11,13 @@ import random
 import copy
 import json
 from tkinter import messagebox
+import winsound
+from tkinter import ttk
+import os
 
-blank_table = [[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0]]
 
+# mettre une table vide à une variable pour écourter le code car elle apparaît plusieurs fois
+blank_table = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
 
 # tableau 2 dimensions avec des valeurs (4x4)
 values_tables = copy.deepcopy(blank_table)
@@ -170,6 +172,7 @@ except ValueError:
 score_base.close()
 
 
+
 # tableau 2 dimensions avec des vides qui deviendront des labels.
 labels = [[None, None, None, None],
           [None, None, None, None],
@@ -190,11 +193,6 @@ sizey = 800
 fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
 fen.config(bg='#0C343D')
 fen.resizable(width=False, height=False)
-
-# to play
-# winsound.PlaySound('music.wav', winsound.SND_ASYNC)
-# to stop
-# winsound.PlaySound(None, winsound.SND_PURGE)
 
 # Titre du jeu
 Ltitle = Label(text='2048', font=("Arial",40), bg='#0C343D', fg='white').pack(pady=10)
@@ -236,6 +234,20 @@ def Undo():
     score = undo_score
     display(values_tables)
 
+def play():
+    # Obtenir l'élément sélectionné
+    music = Lmusicchoose.get()
+    # vérifier si c'est un .wav'
+    if music[-4:-1] !='.wa':
+        messagebox.showerror("Erreur", "Musique invalide")
+    # si oui jouer la musique
+    else:
+        winsound.PlaySound(f'{path}\{music}', winsound.SND_ASYNC)
+
+def stop():
+    # arrêter la musique
+    winsound.PlaySound(None, winsound.SND_PURGE)
+
 # Fonction qui affiche le menu debug
 def cheat_screen():
     sizex = 900
@@ -251,6 +263,10 @@ def cheat_screen():
     Bcheat_randomnb.place(x=730,y=220)
     Bcheat_randomcolor.place(x=710,y=250)
     Bclear_highscore.place(x=715,y=300)
+    Lmusic.place(x=690, y=350)
+    Lmusicchoose.place(x=690, y=370)
+    Bplay.place(x=720, y=390)
+    Bstop.place(x=760, y=390)
 
 # Fonction pour quitter le menu debug
 def quit_cheat_screen():
@@ -365,6 +381,37 @@ Bcheat_randomcolor = Button(image=Rainbow_img, bg='#0C343D', activebackground='#
 
 # Bouton permettant de remttre le highscore à 0
 Bclear_highscore = Button(text='Clear Highscore', bg='#0C343D', fg='white',borderwidth=0,command=lambda: clear_highscore())
+
+
+# mettre le chemin du dossier contenant les musiques
+path = '..\Sprint_3\music'
+
+# liste qui va contenir les musiques
+listmusics=[]
+
+# Prendre les musiques depuis le chemin
+files = os.listdir(path)
+
+# Boucle qui va prendre tous les noms de musiques dans la liste et si le format n'est pas en .wav(seul format utilisable avec winsound) il va afficher que le format est mauvais
+for name in files:
+    print(name)
+    print(name[-4:-1])
+    if name[-4:-1] != '.wa':
+        listmusics.append('Mauvais format de musique')
+    else:
+        listmusics.append(name)
+# Si aucune musiques dans le dossier, mettre Aucune musique trouvée dans la liste afin de l'afficher et indiquer le chemin ou mettre les musiques
+if len(listmusics) == 0:
+    listmusics.append('Aucune musique trouvée')
+    listmusics.append(f'Dans {path}')
+
+Lmusic = Label(text="Veuillez choisir une musique", bg='#0C343D', fg='white', borderwidth=0)
+Lmusicchoose = ttk.Combobox(values=listmusics)
+Bplay = Button(text="Play", bg='#0C343D', fg='white', borderwidth=0, command=lambda: play())
+Bstop = Button(text="Stop", bg='#0C343D', fg='white', borderwidth=0, command=lambda: stop())
+
+# mettre comme valeur de base dans la liste 0
+Lmusicchoose.current(0)
 
 # Fonction afin de continuer le jeu quand on atteint 2048
 def continue_game():
