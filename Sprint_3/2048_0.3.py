@@ -138,11 +138,15 @@ def tass_bind(event):
     # Spawn de 2 si la table à changée
     if table > 0:
         table = 0
+        # génerer des coordonnées
         x = random.randint(0, 3)
         y = random.randint(0, 3)
+        # vérifier quelles sont libres
         while values_tables[x][y] != 0:
+            # sinon regénerer les coordonnées jusqu'à avoir une case vide
             x = random.randint(0, 3)
             y = random.randint(0, 3)
+        # mettre une  valeur au coordonnées vides trouvées, 80% de chance que ce soit un 2, 20% de chance d'avoir un 4
         values_tables[x][y] = random.choice(value_list)
         labels[x][y].config(text=values_tables[x][y], bg='black', fg='white')
 
@@ -165,9 +169,11 @@ colors = {0: '#ffffff', 2: '#FFE3CC', 4: '#DCC3A1', 8: '#03A678', 16: '#02735E',
 # Initialiser le score de base si une partie à été commencée
 score_base = open("txt\Score.txt", 'r')
 try:
+    # essayer de prendre le score
     score = int(score_base.read())
     undo_score = score
 except ValueError:
+    # si il y a un problème en récupérant le score, le mettre à 0
     score = 0
 score_base.close()
 
@@ -187,11 +193,16 @@ height = 150
 
 # Construction de la fenêtre :
 fen = Tk()
+# titre de la fenêtre
 fen.title(f'2048 by John Jaccard v{Version}')
+# dimension de la fenêtre
 sizex = 650
 sizey = 800
+# placer la fenêtre au mileu de l'écran et avec les dimensions précisé juste avant
 fen.geometry(f"{sizex}x{sizey}+{int((1920-sizex)/2)}+{int((1080-sizey)/2)}")
+# changer la couleur de fond de la fenêtre
 fen.config(bg='#0C343D')
+# empêcher le redimensionnement de la fenêtre
 fen.resizable(width=False, height=False)
 
 # Titre du jeu
@@ -211,6 +222,7 @@ fen.bind("<Key>", lambda event: tass_bind(event))
 
 # Score du jeu
 Lscore = Label(font=("Arial", 17), bg='#0C343D', fg='white')
+# Meilleur score du jeu
 LHighScore = Label(font=("Arial", 17),bg='#0C343D', fg='white', text=f'Highscore : {Highscore}')
 
 # Touche afin d'annuler la dernière action
@@ -248,7 +260,7 @@ def stop():
     # arrêter la musique
     winsound.PlaySound(None, winsound.SND_PURGE)
 
-# Fonction qui affiche le menu debug
+# Fonction qui affiche le menu debug en placant tous ces éléments et en agrandissant la fenêtre
 def cheat_screen():
     sizex = 900
     sizey = 800
@@ -268,7 +280,7 @@ def cheat_screen():
     Bplay.place(x=720, y=390)
     Bstop.place(x=760, y=390)
 
-# Fonction pour quitter le menu debug
+# Fonction pour quitter le menu debug en rétrécissant la fenêtre en largeur
 def quit_cheat_screen():
     sizex = 650
     sizey = 800
@@ -346,6 +358,7 @@ def random_cheat_screen():
         values_tables[x][y] = j
     display(values_tables)
 
+# Remettre le meilleur score à 0
 def clear_highscore():
     global Highscore
     Highscore = 0
@@ -362,7 +375,7 @@ Lcheat_x_y = Label(text='Veuillez indiquez des coords entre 0 et 3',bg='#0C343D'
 Echeat_x = Entry(width=2)
 Echeat_y = Entry(width=2)
 
-# Label et entrée pour demander le nombre à spawn
+# Label et entrée pour demander le chiffre à spawn
 Lcheat_nb = Label(text='Veuillez insérer le nb à placer',bg='#0C343D',fg='white',borderwidth=0)
 Echeat_nb = Entry(width=10)
 
@@ -392,22 +405,30 @@ listmusics=[]
 # Prendre les musiques depuis le chemin
 files = os.listdir(path)
 
-# Boucle qui va prendre tous les noms de musiques dans la liste et si le format n'est pas en .wav(seul format utilisable avec winsound) il va afficher que le format est mauvais
+# Boucle qui va prendre tous les noms de musiques dans la liste et si le format n'est pas en .wav(seul format supporté avec winsound), il va afficher que le format est mauvais
 for name in files:
-    print(name)
-    print(name[-4:-1])
+    # vérifier si c'est le bon format
     if name[-4:-1] != '.wa':
         listmusics.append('Mauvais format de musique')
     else:
+        # si ca l'est, va ajouter la musique à la liste
         listmusics.append(name)
+
 # Si aucune musiques dans le dossier, mettre Aucune musique trouvée dans la liste afin de l'afficher et indiquer le chemin ou mettre les musiques
 if len(listmusics) == 0:
     listmusics.append('Aucune musique trouvée')
     listmusics.append(f'Dans {path}')
 
+# label présentant le menu de musique
 Lmusic = Label(text="Veuillez choisir une musique", bg='#0C343D', fg='white', borderwidth=0)
+
+# Liste avec les musiques
 Lmusicchoose = ttk.Combobox(values=listmusics)
+
+# Bouton pour lancer la musique
 Bplay = Button(text="Play", bg='#0C343D', fg='white', borderwidth=0, command=lambda: play())
+
+# Bouton pour stopper la musique
 Bstop = Button(text="Stop", bg='#0C343D', fg='white', borderwidth=0, command=lambda: stop())
 
 # mettre comme valeur de base dans la liste 0
@@ -563,12 +584,13 @@ if Start_game.read() != "":
 else:
     newGame()
 
+# fermer le fichier texte
 Start_game.close()
 
 # Recommencer le jeu
 Brestart = Button(text='New game',bg='#0C343D',fg='white',borderwidth=0, command=newGame, activebackground='#0C343D').pack()
 
-
+# placer les boutons de bases qui sont toujours présents
 BUndo.place(x=30, y=30)
 Lscore.pack(side=BOTTOM)
 LHighScore.pack(side=BOTTOM)
